@@ -46,12 +46,12 @@ aws-vault exec prpl-$(basename $(realpath .)) -- kubectl get svc
 
 Initialise Cluster with Metrics, Dashboard
 ------------------------------------------
-Deploy the module ```terraform-module-aws-k8s-efs-csi```
+Deploy the module ```terraform-module-k8s-dashboard```
 
 
 Initialise Cluster with EFS CSI Driver
 ---------------------------------------
-Deploy the module ```terraform-module-aws-k8s-dashboard```
+Deploy the module ```terraform-module-aws-k8s-efs-csi```
 
 
 Using K8s Dashboard
@@ -59,10 +59,12 @@ Using K8s Dashboard
 The full-featured [Dashboard](https://docs.aws.amazon.com/eks/latest/userguide/dashboard-tutorial.html) should already be installed in the cluster (from prior section).
 To use it do :
 ```shell script
-aws-vault exec prpl-$(basename $(realpath .)) -- /bin/bash
 # Get our login token
-kubectl -n kube-system describe secret $(kubectl -n kube-system get secret | grep eks-admin | awk '{print $1}')
+kubectl -n kube-system describe secret $(kubectl -n kube-system get secret | grep dashboard-admin | awk '{print $1}')
+# Invoke the Proxy to give access to the Dashboard
+kubectl proxy
 ```
+
 then open in [browser](http://localhost:8001/api/v1/namespaces/kubernetes-dashboard/services/https:kubernetes-dashboard:/proxy/#!/login)
 
 and use the Token as displayed in your terminal for login. 
